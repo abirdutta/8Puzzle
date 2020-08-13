@@ -44,7 +44,8 @@ class Searcher:
 
 
     def should_add(self, state):
-        """takes a State object called state and returns True if the called Searcher should add state to its list of untested states, and False otherwise."""
+        """takes a State object called state and returns True if the called Searcher should add state to 
+        its list of untested states, and False otherwise."""
         if state == GOAL_TILES or self.depth_limit != -1 or state.creates_cycle() == True:
             return False               
         else:
@@ -60,7 +61,7 @@ class Searcher:
         """takes a list State objects called new_states, and that processes the elements of new_states one at a time"""
         for s in new_states:
             if self.depth_limit == -1 and s.creates_cycle() == False:
-                self.add_state(new_states)
+                self.add_state(s) # Changed new_states to s
     
     def next_state(self):
         """ chooses the next state to be tested from the list of 
@@ -75,8 +76,7 @@ class Searcher:
         while len(self.states) > 0:
             self.num_tested += 1
             s = self.next_state()
-            if s == GOAL_TILES:
-                return s
+            if s.board.tiles == GOAL_TILES: # Changed s to s.board.tiles
             else:
                 self.add_states(s.generate_successors())
         else: 
@@ -170,127 +170,41 @@ class AStarSearcher(GreedySearcher):
 
 
 if __name__ == "__main__":
-    searcher1 = Searcher(-1)
-    print(searcher1)
-    searcher2 = Searcher(10)
-    print(searcher2)
-
-    b1 = Board('142358607')
-    s1 = State(b1, None, 'init')  # initial state
-    searcher1 = Searcher(-1)  # no depth limit
-    searcher1.add_state(s1)
-    searcher2 = Searcher(1)   # depth limit of 1 move!
-    searcher1.add_state(s1)
-    b2 = b1.copy()
-    print(b2.move_blank('left'))
-
-    s2 = State(b2, s1, 'left')
-    print(searcher1.should_add(s2))
-
-    print(searcher2.should_add(s2))
-
-    b3 = b2.copy()
-    print(b3.move_blank('right'))
-
-
-    print('num3')
-    b = Board('142358607')
+    print("Example 1:")
+    print("============")
+    
+    b = Board('012345678')
     s = State(b, None, 'init')
-    searcher = Searcher(-1)
-    searcher.add_state(s)
-    print(searcher.states)
-
-    succ = s.generate_successors()
-    print('succ =', succ)
-
-
-    print('num4')
-    b = Board('142358607')
-    s = State(b, None, 'init')
-    searcher = Searcher(-1)
-    searcher.add_state(s)
-    print(searcher.states)
-
-    succ = s.generate_successors()
-    print(succ)
-
-    print('num6')
-    b = Board('012345678')       # the goal state!
-    s = State(b, None, 'init')   # start at the goal
     print(s)
-
     searcher = Searcher(-1)
     print(searcher)
-
-    print(searcher.find_solution(s))
-
+    searcher.find_solution(s)
     print(searcher)
 
+    print("Example 2:")
+    print("============")
 
-
-    # part IV
-    print('####PARTIV###')
-    b = Board('142358607')       
+    b = Board('142358607')
     s = State(b, None, 'init')
     print(s)
+    searcher = Searcher(-1)
+    print(searcher)
+    searcher.find_solution(s)
+    print(searcher)
+    searcher = Searcher(-1)
+    print(searcher)
+    searcher.find_solution(s)
+    print(searcher)
 
-    bfs = BFSearcher(-1)
-    bfs.add_state(s)
-    print(bfs.next_state())
+    print("Example 3:")
+    print("============")
 
-    succ = s.generate_successors()
-    print(succ)
-
-    bfs.add_states(succ)
-    print(bfs.next_state())
-
-    print('####DFS######')
-    b = Board('142358607')       
-    s = State(b, None, 'init')
-    print(s)
-
-    dfs = DFSearcher(-1)
-    dfs.add_state(s)
-    print(dfs.next_state())
-
-    succ = s.generate_successors()
-    print(succ)
-
-    dfs.add_states(succ)
-    print(dfs.next_state())
-
-    print('####greedy and a###')
-    b = Board('142358607')       
-    s = State(b, None, 'init')
-    g = GreedySearcher(-1, h1)
-
-    g.add_state(s)
-    print(g.states)
-
-    succ = s.generate_successors()
-    g.add_state(succ[0])
-    print(g.states)
-
-    g.add_state(succ[1])
-    print(g.states)
-
-    print(g.next_state())
-    print(g.states)
-
-
-    #5
-    b = Board('142358607')       
-    s = State(b, None, 'init')
-    a = AStarSearcher(-1, h1)  # no depth limit, basic heuristic
-    a.add_state(s)
-    print(a.states)
-
-    succ = s.generate_successors()
-    a.add_state(succ[1])
-    print(a.states) 
-    print(a.next_state)
-    print(a.states)
-
-
+    b = Board('142305678')
+    print(b)
+    s = State(b, None, 'init') 
+    searcher = Searcher(-1)
+    goal = searcher.find_solution(s)
+    print(goal)
+    goal.print_moves_to()
 
 

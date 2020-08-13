@@ -88,6 +88,17 @@ class State:
         """
         # You should *NOT* change this method.
         return True
+
+    def print_moves_to(self):
+        if self.predecessor==None:
+            print(self.board)
+        else:
+            while self.predecessor!=None:
+                print(self.move)
+                print(self.board)
+                next=self.predecessor
+                next.print_moves_to()
+
     
 
 
@@ -107,4 +118,5 @@ if __name__ == "__main__":
     print(succ[2].generate_successors())
     print(succ[0])
     print(succ[0].generate_successors())
+    
 

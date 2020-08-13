@@ -161,6 +161,30 @@ if __name__ == "__main__":
     print(b.blank_r)
     print(b.blank_c)
 
+    print(b.move_blank('down'))
+    print(b)
+    print(b.tiles)
+    print(b.blank_r)
+    print(b.blank_c)
+
+    print(b.move_blank('left'))
+    print(b)
+    print(b.tiles)
+    print(b.blank_r)
+    print(b.blank_c)
+
+    print(b.move_blank('right'))
+    print(b)
+    print(b.tiles)
+    print(b.blank_r)
+    print(b.blank_c)
+
+    print(b.move_blank('down'))
+    print(b)
+    print(b.tiles)
+    print(b.blank_r)
+    print(b.blank_c)
+
     b1 = Board('142358067')
     print(b1.digit_string())
     print(b1)
@@ -168,4 +192,9 @@ if __name__ == "__main__":
     b2 = Board('142358607')
     print(b2)
     print(b2.num_misplaced())
+
+    print(b2.move_blank('left'))
+    print(b2.digit_string())
+
+    print(b1==b2)
 
