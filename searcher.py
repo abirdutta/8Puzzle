@@ -13,6 +13,9 @@
 
 import random
 from state import *
+from board import *
+
+
 
 class Searcher:
     """ A class for objects that perform random state-space
@@ -54,7 +57,6 @@ class Searcher:
     
     def add_state(self, new_state):
         """that adds takes a single State object called new_state and adds it to the Searcher‘s list of untested states. This method should only require one line of code! It should not return a value."""
-    
         self.states += [new_state]
     
     def add_states(self, new_states):
@@ -76,7 +78,11 @@ class Searcher:
         while len(self.states) > 0:
             self.num_tested += 1
             s = self.next_state()
+            #print("Inside Find Solutions->")
+            #print(s.board.digit_string())
+            #print("End of Find Solutions")
             if s.board.tiles == GOAL_TILES: # Changed s to s.board.tiles
+                return s
             else:
                 self.add_states(s.generate_successors())
         else: 
@@ -118,33 +124,16 @@ class GreedySearcher(Searcher):
         self.heuristic = heuristic
     
     def priority(self, state):
-        return -1 * Board.num_misplaced()
+        return -1 * state.board.num_misplaced()
     
     def add_state(self, state):
-        self.states += [self.priority(state), state]
+        self.states += [[self.priority(state), state]]
         
 
     def next_state(self):
         s = max(self.states)
         self.states.remove(s)
-        return s[1]
-
-def h0(state):
-    """ a heuristic function that always returns 0 """
-    return 0
-
-def h1(state):
-    """to find num misplaced tiles"""
-    return num_misplaced(state) * -1
-
-def h2(state):
-    """ find num misplaced tiles and moves to get there"""
-    return (self.num_misplaced + self.num_moves) * -1 
-
-
-### Add your other heuristic functions here. ###
-
-
+        return s
 
 
     def __repr__(self):
@@ -158,12 +147,33 @@ def h2(state):
         s += 'heuristic ' + self.heuristic.__name__
         return s
 
+    ### Add your other heuristic functions here. ###
+
+def h0(state):
+    """ a heuristic function that always returns 0 """
+    return 0
+
+def h1(state):
+    """to find num misplaced tiles"""
+    return state.board.num_misplaced() * 1
+
+def h2(state):
+    """ find num misplaced tiles and moves to get there"""
+    return (state.board.num_misplaced() + s.num_moves) * -1 
+
+
+    
+
 
 ### Add your AStarSeacher class definition below. ###
 
 class AStarSearcher(GreedySearcher):
     def priority(self, state):
-        return -1 * (self.heuristic(state) + self.num_moves)
+        print("Inside A Star Priority ->")
+        print(self.heuristic(state))
+        print(state.num_moves)
+        print("End of A Star Priority")
+        return -1 * (self.heuristic(state) + state.num_moves)
 
 
 
@@ -203,8 +213,38 @@ if __name__ == "__main__":
     print(b)
     s = State(b, None, 'init') 
     searcher = Searcher(-1)
-    goal = searcher.find_solution(s)
+    goal = searcher.find_solution(s) # goal is of type state
     print(goal)
     goal.print_moves_to()
 
+    print("Example 4:")
+    print("============")
 
+    b = Board('142358607')  
+    s = State(b, None, 'init')
+    gs = GreedySearcher(-1, h1)  # no depth limit, basic heuristic
+    print(gs)
+    g = gs.find_solution(s)
+    g.add_state(s)
+    print(g.states)
+    succ = s.generate_successors()
+    g.add_state(succ[0])
+    print(g.states)
+    g.add_state(succ[1])
+    print(g.states)
+    print(g.next_state())
+    print(g.states)
+
+    print("Example 5:")
+    print("============")
+
+    b = Board('142358607') 
+    s = State(b, None, 'init')
+    a = AStarSearcher(-1, h1)
+    a.add_state(s)
+    print(a.states)
+    succ = s.generate_successors()
+    a.add_state(succ[1])
+    print(a.states)
+    print(a.next_state())
+    print(a.states)

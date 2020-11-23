@@ -194,7 +194,7 @@ if __name__ == "__main__":
     print(b2.num_misplaced())
 
     print(b2.move_blank('left'))
-    print(b2.digit_string())
+    print(b.digit_string())
 
     print(b1==b2)
 

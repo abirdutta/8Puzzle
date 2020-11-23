@@ -18,6 +18,8 @@ GOAL_TILES = [[0, 1, 2],
               [3, 4, 5],
               [6, 7, 8]]
 
+#GOAL_TILES = Board('012345678')
+
 # the list of possible moves, each of which corresponds to
 # moving the blank cell in the specified direction
 MOVES = ['up', 'down', 'left', 'right']
@@ -90,14 +92,13 @@ class State:
         return True
 
     def print_moves_to(self):
-        if self.predecessor==None:
+        if self.predecessor == None:
+            print('initial state:')
             print(self.board)
         else:
-            while self.predecessor!=None:
-                print(self.move)
-                print(self.board)
-                next=self.predecessor
-                next.print_moves_to()
+            self.predecessor.print_moves_to()
+            print("move the blank " + self.move)
+            print(self.board)
 
     
 
